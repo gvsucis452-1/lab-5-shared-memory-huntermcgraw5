@@ -3,7 +3,7 @@
  * sampleProgram1.c
  * CIS 451 Lab 5
  *
- * !!!NAMES!!!
+ * Hunter McGraw
  *************************************************************/
 
 #include <stdio.h> 
@@ -19,6 +19,7 @@ int main ()
 { 
    int shmId; 
    char *sharedMemoryPtr;
+   struct shmid_ds shmid_struct;
    
    if((shmId = shmget(IPC_PRIVATE, SHM_SIZE, IPC_CREAT|S_IRUSR|S_IWUSR)) < 0) { 
       perror ("Unable to get shared memory\n"); 
@@ -34,11 +35,12 @@ int main ()
    if(shmdt (sharedMemoryPtr) < 0) { 
       perror ("Unable to detach\n"); 
       exit (1); 
-   } 
-   if(shmctl (shmId, IPC_RMID, 0) < 0) { 
-      perror ("Unable to deallocate\n"); 
-      exit(1); 
    }
+   if(shmctl (shmId, IPC_STAT, &shmid_struct) < 0) {
+      perror ("Unable to copy information into struct\n");
+      exit(1);
+   }
+   printf("%ld\n", shmid_struct.shm_segsz);
 
    return 0; 
 }
