@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <sys/ipc.h> 
 #include <sys/shm.h>
+#include <unistd.h>
 
 #define SHM_SIZE 4096
 
@@ -40,7 +41,11 @@ int main ()
       perror ("Unable to copy information into struct\n");
       exit(1);
    }
-   printf("%ld\n", shmid_struct.shm_segsz);
+   printf("ID: %d\n", shmId);
+   printf("Size: %ld\n", shmid_struct.shm_segsz);
+   
+   pause();
+
 
    return 0; 
 }
