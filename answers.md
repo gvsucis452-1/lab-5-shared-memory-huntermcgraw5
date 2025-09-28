@@ -18,6 +18,10 @@ shmctl() can destroy the shared memory segment by using the IPC_RMID argument. I
 
 4. Read the man pages, then use shmctl() to modify Sample Program 1 so that it prints out the size of the shared memory segment
 
-
+See sampleProgram1.c
 
 5. Submit your screenshots
+
+   <img width="795" height="315" alt="image" src="https://github.com/user-attachments/assets/ae8eaf8f-77e5-4ce2-b70b-8fbbe9d1d828" />
+
+<img width="809" height="217" alt="image" src="https://github.com/user-attachments/assets/54016568-9796-4114-80b7-1897d0399d09" />
