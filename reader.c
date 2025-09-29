@@ -20,6 +20,7 @@ int main ()
 { 
    int shmId; 
    char *sharedMemoryPtr;
+   char *turn = sharedMemoryPtr[0];
    struct shmid_ds shmid_struct;
    key_t passkey;
    passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
@@ -35,8 +36,17 @@ int main ()
       exit (1); 
    }
 
-   printf("Value a: %p\t Value b: %p\n", (void *) sharedMemoryPtr, (void *) sharedMemoryPtr + SHM_SIZE);
-   printf("Reader Received: %s\n", sharedMemoryPtr);
+
+
+   while(1) {
+      printf("waiting\n");
+      while(turn == 'w');
+      printf("Reader Received: %s\n", sharedMemoryPtr);
+      strcpy(sharedMemoryPtr, 'w');
+   }
+
+
+
 
    if(shmdt (sharedMemoryPtr) < 0) { 
       perror ("Unable to detach\n"); 

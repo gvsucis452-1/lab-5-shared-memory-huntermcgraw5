@@ -22,7 +22,7 @@ int main ()
    int shmId; 
    char *sharedMemoryPtr;
    char input[128];
-   char turn;
+   char *turn = sharedMemoryPtr[0];
    struct shmid_ds shmid_struct;
    key_t passkey;
    passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
@@ -52,11 +52,10 @@ int main ()
    */
    while(1) {
        printf("waiting\n");
-       //while(turn = 'r');
+       while(turn == 'r');
        printf("Input something to write: ");
        scanf("%s", input);
-       strcpy(sharedMemoryPtr, input);		
-       //turn = 'r';
+       strcpy(sharedMemoryPtr, 'r' + input);		
    }
 
 
