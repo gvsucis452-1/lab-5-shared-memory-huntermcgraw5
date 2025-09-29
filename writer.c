@@ -22,7 +22,6 @@ int main ()
    int shmId; 
    char *sharedMemoryPtr;
    char input[128];
-   char turn = sharedMemoryPtr[0];
    struct shmid_ds shmid_struct;
    key_t passkey;
    passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
@@ -36,7 +35,6 @@ int main ()
       perror ("Unable to attach\n"); 
       exit (1); 
    }
-   strcpy(sharedMemoryPtr, "abcd");
    printf("Value a: %p\t Value b: %p\n", (void *) sharedMemoryPtr, (void *) sharedMemoryPtr + SHM_SIZE);
   // printf("Shared mem: %s\n", sharedMemoryPtr);
   /* if(shmdt (sharedMemoryPtr) < 0) { 
@@ -50,12 +48,18 @@ int main ()
    printf("ID: %d\n", shmId);
    printf("Size: %ld\n", shmid_struct.shm_segsz);
    */
+   strcpy(sharedMemoryPtr, "w");
+   char turn;
    while(1) {
+       turn = sharedMemoryPtr[0];
        printf("waiting\n");
-       while(turn == 'r');
+       while(turn == 'r') {
+       	  turn = sharedMemoryPtr[0];
+       }
        printf("Input something to write: ");
        scanf("%s", input);
-       strcpy(sharedMemoryPtr, 'r' + input);		
+       strcpy(sharedMemoryPtr, "r");
+       strcat(sharedMemoryPtr, input);		
    }
 
 

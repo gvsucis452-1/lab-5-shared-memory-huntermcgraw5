@@ -21,12 +21,10 @@ int main ()
 { 
    int shmId; 
    char *sharedMemoryPtr;
-   char turn = sharedMemoryPtr[0];
    struct shmid_ds shmid_struct;
    key_t passkey;
    passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
-   printf("%d\n", passkey);
-   
+
    if((shmId = shmget(passkey, SHM_SIZE, S_IRUSR | S_IWUSR)) < 0) { 
       perror ("Unable to get shared memory\n"); 
       exit (1); 
@@ -36,13 +34,14 @@ int main ()
       perror ("Unable to attach\n"); 
       exit (1); 
    }
-
-
-
+   
+   char turn;
    while(1) {
-      printf("waiting\n");
-      while(turn == 'w');
-      printf("Reader Received: %s\n", sharedMemoryPtr);
+      turn = sharedMemoryPtr[0];
+      while(turn == 'w') {
+         turn = sharedMemoryPtr[0];
+      }
+      printf("Reader Received: %s\n", sharedMemoryPtr + 1);
       strcpy(sharedMemoryPtr, "w");
    }
 
