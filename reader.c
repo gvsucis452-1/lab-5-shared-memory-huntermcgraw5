@@ -14,6 +14,9 @@
 #include <sys/shm.h>
 #include <unistd.h>
 #include <string.h>
+#include <signal.h>
+
+void sigIntHandler(int);
 
 #define SHM_SIZE 4096
 
@@ -23,6 +26,9 @@ int main ()
    char *sharedMemoryPtr;
    struct shmid_ds shmid_struct;
    key_t passkey;
+
+   signal(SIGINT, sigIntHandler);
+
    passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
 
    if((shmId = shmget(passkey, SHM_SIZE, S_IRUSR | S_IWUSR)) < 0) { 
@@ -45,8 +51,12 @@ int main ()
       strcpy(sharedMemoryPtr, "w");
    }
 
+   return 0; 
+}
 
-
+void sigIntHandler(int sig_num)
+{
+   printf(" received an interrupt.\n");
 
    if(shmdt (sharedMemoryPtr) < 0) { 
       perror ("Unable to detach\n"); 
@@ -56,12 +66,7 @@ int main ()
       perror ("Unable to copy information into struct\n");
       exit(1);
    }
-   printf("ID: %d\n", shmId);
-   printf("Size: %ld\n", shmid_struct.shm_segsz);
-   
-   pause();
 
-
-   return 0; 
+   printf("time to exit\n");
+   exit(0);
 }
-

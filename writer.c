@@ -14,6 +14,9 @@
 #include <sys/shm.h>
 #include <unistd.h>
 #include <string.h>
+#include <signal.h>
+
+void sigIntHandler(int);
 
 #define SHM_SIZE 4096
 
@@ -24,8 +27,10 @@ int main ()
    char input[128];
    struct shmid_ds shmid_struct;
    key_t passkey;
+
+   signal(SIGINT, sigIntHandler);
+
    passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
-   printf("%d\n", passkey);
    
    if((shmId = shmget(passkey, SHM_SIZE, IPC_CREAT|S_IRUSR|S_IWUSR)) < 0) { 
       perror ("Unable to get shared memory\n"); 
@@ -35,24 +40,11 @@ int main ()
       perror ("Unable to attach\n"); 
       exit (1); 
    }
-   printf("Value a: %p\t Value b: %p\n", (void *) sharedMemoryPtr, (void *) sharedMemoryPtr + SHM_SIZE);
-  // printf("Shared mem: %s\n", sharedMemoryPtr);
-  /* if(shmdt (sharedMemoryPtr) < 0) { 
-      perror ("Unable to detach\n"); 
-      exit (1); 
-   }
-   if(shmctl (shmId, IPC_STAT, &shmid_struct) < 0) {
-      perror ("Unable to copy information into struct\n");
-      exit(1);
-   }
-   printf("ID: %d\n", shmId);
-   printf("Size: %ld\n", shmid_struct.shm_segsz);
-   */
+
    strcpy(sharedMemoryPtr, "w");
    char turn;
    while(1) {
        turn = sharedMemoryPtr[0];
-       printf("waiting\n");
        while(turn == 'r') {
        	  turn = sharedMemoryPtr[0];
        }
@@ -64,4 +56,21 @@ int main ()
 
 
    return 0; 
+}
+
+void sigIntHandler(int sig_num)
+{
+   printf(" received an interrupt.\n");
+
+   if(shmdt (sharedMemoryPtr) < 0) { 
+      perror ("Unable to detach\n"); 
+      exit (1); 
+   }
+   if(shmctl (shmId, IPC_STAT, &shmid_struct) < 0) {
+      perror ("Unable to copy information into struct\n");
+      exit(1);
+   }
+
+   printf("time to exit\n");
+   exit(0);
 }
