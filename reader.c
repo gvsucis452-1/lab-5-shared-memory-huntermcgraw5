@@ -22,18 +22,21 @@ int main ()
    char *sharedMemoryPtr;
    struct shmid_ds shmid_struct;
    key_t passkey;
+   passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
+   printf("%d\n", passkey);
    
-   if((shmId = shmget(IPC_PRIVATE, SHM_SIZE, IPC_CREAT|S_IRUSR|S_IWUSR)) < 0) { 
+   if((shmId = shmget(passkey, SHM_SIZE, S_IRUSR | S_IWUSR)) < 0) { 
       perror ("Unable to get shared memory\n"); 
       exit (1); 
    }
-   passkey = ftok();
+
    if((sharedMemoryPtr = shmat (shmId, 0, 0)) == (void*) -1) { 
       perror ("Unable to attach\n"); 
       exit (1); 
    }
 
    printf("Value a: %p\t Value b: %p\n", (void *) sharedMemoryPtr, (void *) sharedMemoryPtr + SHM_SIZE);
+   printf("Reader Received: %s\n", sharedMemoryPtr);
 
    if(shmdt (sharedMemoryPtr) < 0) { 
       perror ("Unable to detach\n"); 

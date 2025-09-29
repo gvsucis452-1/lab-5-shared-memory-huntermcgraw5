@@ -13,6 +13,7 @@
 #include <sys/ipc.h> 
 #include <sys/shm.h>
 #include <unistd.h>
+#include <string.h>
 
 #define SHM_SIZE 4096
 
@@ -20,9 +21,14 @@ int main ()
 { 
    int shmId; 
    char *sharedMemoryPtr;
+   char input[128];
+   char turn;
    struct shmid_ds shmid_struct;
+   key_t passkey;
+   passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
+   printf("%d\n", passkey);
    
-   if((shmId = shmget(IPC_PRIVATE, SHM_SIZE, IPC_CREAT|S_IRUSR|S_IWUSR)) < 0) { 
+   if((shmId = shmget(passkey, SHM_SIZE, IPC_CREAT|S_IRUSR|S_IWUSR)) < 0) { 
       perror ("Unable to get shared memory\n"); 
       exit (1); 
    } 
@@ -30,10 +36,10 @@ int main ()
       perror ("Unable to attach\n"); 
       exit (1); 
    }
-
+   strcpy(sharedMemoryPtr, "abcd");
    printf("Value a: %p\t Value b: %p\n", (void *) sharedMemoryPtr, (void *) sharedMemoryPtr + SHM_SIZE);
-
-   if(shmdt (sharedMemoryPtr) < 0) { 
+  // printf("Shared mem: %s\n", sharedMemoryPtr);
+  /* if(shmdt (sharedMemoryPtr) < 0) { 
       perror ("Unable to detach\n"); 
       exit (1); 
    }
@@ -43,8 +49,15 @@ int main ()
    }
    printf("ID: %d\n", shmId);
    printf("Size: %ld\n", shmid_struct.shm_segsz);
-   
-   pause();
+   */
+   while(1) {
+       printf("waiting\n");
+       //while(turn = 'r');
+       printf("Input something to write: ");
+       scanf("%s", input);
+       strcpy(sharedMemoryPtr, input);		
+       //turn = 'r';
+   }
 
 
    return 0; 
