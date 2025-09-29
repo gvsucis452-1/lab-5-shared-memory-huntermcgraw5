@@ -22,7 +22,7 @@ int main ()
    int shmId; 
    char *sharedMemoryPtr;
    char input[128];
-   char *turn = sharedMemoryPtr[0];
+   char turn = sharedMemoryPtr[0];
    struct shmid_ds shmid_struct;
    key_t passkey;
    passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);

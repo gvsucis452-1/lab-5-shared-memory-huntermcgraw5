@@ -20,7 +20,7 @@ int main ()
 { 
    int shmId; 
    char *sharedMemoryPtr;
-   char *turn = sharedMemoryPtr[0];
+   char turn = sharedMemoryPtr[0];
    struct shmid_ds shmid_struct;
    key_t passkey;
    passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
@@ -42,7 +42,7 @@ int main ()
       printf("waiting\n");
       while(turn == 'w');
       printf("Reader Received: %s\n", sharedMemoryPtr);
-      strcpy(sharedMemoryPtr, 'w');
+      strcpy(sharedMemoryPtr, "w");
    }
 
 
