@@ -16,21 +16,20 @@
 #include <string.h>
 #include <signal.h>
 
+#define SHM_SIZE 4096
+
 void sigIntHandler(int);
 
-#define SHM_SIZE 4096
+char *sharedMemoryPtr;
+int shmId;
 
 int main () 
 { 
-   int shmId; 
-   char *sharedMemoryPtr;
-   char input[128];
-   struct shmid_ds shmid_struct;
-   key_t passkey;
-
    signal(SIGINT, sigIntHandler);
+   
+   char input[128];
 
-   passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
+   key_t passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
    
    if((shmId = shmget(passkey, SHM_SIZE, IPC_CREAT|S_IRUSR|S_IWUSR)) < 0) { 
       perror ("Unable to get shared memory\n"); 
@@ -66,9 +65,9 @@ void sigIntHandler(int sig_num)
       perror ("Unable to detach\n"); 
       exit (1); 
    }
-   if(shmctl (shmId, IPC_STAT, &shmid_struct) < 0) {
-      perror ("Unable to copy information into struct\n");
-      exit(1);
+
+   if(shmctl (shmId, IPC_RMID, 0) < 0) { 
+      perror ("Unable to deallocate\n"); 
    }
 
    printf("time to exit\n");
