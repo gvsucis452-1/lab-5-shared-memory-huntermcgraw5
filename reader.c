@@ -27,7 +27,7 @@ int main ()
 { 
    signal(SIGINT, sigIntHandler);
 
-   key_t passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
+   key_t passkey = ftok("writer.c", 1);
 
    if((shmId = shmget(passkey, SHM_SIZE, S_IRUSR | S_IWUSR)) < 0) { 
       perror ("Unable to get shared memory\n"); 
@@ -40,6 +40,7 @@ int main ()
    }
    
    char turn;
+   printf("Waiting for writer...\n");
    while(1) {
       turn = sharedMemoryPtr[0];
       while(turn == 'w') {
@@ -59,10 +60,6 @@ void sigIntHandler(int sig_num)
    if(shmdt (sharedMemoryPtr) < 0) { 
       perror ("Unable to detach\n"); 
       exit (1); 
-   }
-
-   if(shmctl (shmId, IPC_RMID, 0) < 0) { 
-      perror ("Unable to deallocate\n"); 
    }
 
    printf("time to exit\n");

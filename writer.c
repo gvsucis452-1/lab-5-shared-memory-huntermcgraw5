@@ -29,7 +29,7 @@ int main ()
    
    char input[128];
 
-   key_t passkey = ftok("/home/mcgrawh/Documents/cis452/lab-5-shared-memory-huntermcgraw5/writer.c", 1);
+   key_t passkey = ftok("writer.c", 1);
    
    if((shmId = shmget(passkey, SHM_SIZE, IPC_CREAT|S_IRUSR|S_IWUSR)) < 0) { 
       perror ("Unable to get shared memory\n"); 
