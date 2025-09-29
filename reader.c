@@ -13,6 +13,7 @@
 #include <sys/ipc.h> 
 #include <sys/shm.h>
 #include <unistd.h>
+#include <string.h>
 
 #define SHM_SIZE 4096
 
