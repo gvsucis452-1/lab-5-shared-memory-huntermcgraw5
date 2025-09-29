@@ -42,7 +42,7 @@ int main ()
    char turn;
    printf("Waiting for writer...\n");
    while(1) {
-      turn = sharedMemoryPtr[0];
+      turn = sharedMemoryPtr[0]; // I'm sure there's a better way to do this
       while(turn == 'w') {
          turn = sharedMemoryPtr[0];
       }
@@ -65,3 +65,4 @@ void sigIntHandler(int sig_num)
    printf("time to exit\n");
    exit(0);
 }
+
