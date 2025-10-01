@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
+#include <stdlib.h>
 
 #define SHM_SIZE 4096
 
@@ -42,7 +43,12 @@ int main ()
    char turn;
    printf("Waiting for writer...\n");
    while(1) {
+
+      // zk This doesn't quite work.
+      // See what happens when the readers don't execute at the same time ....
+      sleep(random() % 4 + 1);
       turn = sharedMemoryPtr[0]; // I'm sure there's a better way to do this
+      // zk while(sharedMemoryPtr[0] == 'w');
       while(turn == 'w') {
          turn = sharedMemoryPtr[0];
       }
