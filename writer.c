@@ -71,3 +71,4 @@ void sigIntHandler(int sig_num)
    printf("time to exit\n");
    exit(0);
 }
+
