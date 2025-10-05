@@ -15,14 +15,17 @@
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
+<<<<<<< Updated upstream
 #include <stdlib.h>
+=======
+>>>>>>> Stashed changes
 
 #define SHM_SIZE 4096
 
 void sigIntHandler(int);
 
-char *sharedMemoryPtr;
-int shmId; 
+char *sharedMemoryPtr, temp[128];
+int shmId, count; 
 
 int main () 
 { 
@@ -39,23 +42,20 @@ int main ()
       perror ("Unable to attach\n"); 
       exit (1); 
    }
-   
-   char turn;
    printf("Waiting for writer...\n");
    while(1) {
-
-      // zk This doesn't quite work.
-      // See what happens when the readers don't execute at the same time ....
       sleep(random() % 4 + 1);
-      turn = sharedMemoryPtr[0]; // I'm sure there's a better way to do this
-      // zk while(sharedMemoryPtr[0] == 'w');
-      while(turn == 'w') {
-         turn = sharedMemoryPtr[0];
-      }
+      while(sharedMemoryPtr[0] == 'w');
       printf("Reader Received: %s\n", sharedMemoryPtr + 1);
-      strcpy(sharedMemoryPtr, "w");
+      strcpy(temp, "1");
+      strcat(temp, sharedMemoryPtr + 1);
+      if (sharedMemoryPtr[0] == 'r') {
+         strcpy(sharedMemoryPtr, temp);
+         while(sharedMemoryPtr[0] == '1');
+      } else {
+         strcpy(sharedMemoryPtr, "w");
+      }
    }
-
    return 0; 
 }
 
@@ -71,4 +71,3 @@ void sigIntHandler(int sig_num)
    printf("time to exit\n");
    exit(0);
 }
-
