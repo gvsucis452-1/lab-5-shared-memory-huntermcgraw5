@@ -25,6 +25,20 @@ int shmId, count;
 
 int main () 
 { 
+
+   int fd[2];
+   int pipe_creation_result;
+
+   pipe_creation_result = pipe(fd);
+
+   if (pipe_creation_result < 0) {
+      perror("Failed pipe creation\n");
+      exit(1);
+   }
+   int output = 0;
+   int input;
+   write(fd[1], &output, sizeof(int));
+
    signal(SIGINT, sigIntHandler);
 
    key_t passkey = ftok("writer.c", 1);
@@ -38,6 +52,7 @@ int main ()
       perror ("Unable to attach\n"); 
       exit (1); 
    }
+   output = 1;
    printf("Waiting for writer...\n");
    while(1) {
       sleep(random() % 4 + 1);
@@ -45,12 +60,19 @@ int main ()
       printf("Reader Received: %s\n", sharedMemoryPtr + 1);
       strcpy(temp, "1");
       strcat(temp, sharedMemoryPtr + 1);
+      read(fd[0], &input, sizeof(int));
+      while(input == 1) {
+         read(fd[0], &input, sizeof(int));
+      }
+      write(fd[1], &output, sizeof(int));
       if (sharedMemoryPtr[0] == 'r') {
          strcpy(sharedMemoryPtr, temp);
          while(sharedMemoryPtr[0] == '1');
       } else {
          strcpy(sharedMemoryPtr, "w");
       }
+      output = 0;
+      write(fd[1], &output, sizeof(int));
    }
    return 0; 
 }
