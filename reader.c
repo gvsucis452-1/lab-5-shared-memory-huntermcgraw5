@@ -15,10 +15,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
-<<<<<<< Updated upstream
-#include <stdlib.h>
-=======
->>>>>>> Stashed changes
 
 #define SHM_SIZE 4096
 
@@ -71,3 +67,4 @@ void sigIntHandler(int sig_num)
    printf("time to exit\n");
    exit(0);
 }
+
