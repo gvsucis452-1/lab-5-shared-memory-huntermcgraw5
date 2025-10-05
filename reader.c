@@ -20,8 +20,8 @@
 
 void sigIntHandler(int);
 
-char *sharedMemoryPtr;
-int shmId; 
+char *sharedMemoryPtr, temp[128];
+int shmId, count; 
 
 int main () 
 { 
@@ -38,18 +38,20 @@ int main ()
       perror ("Unable to attach\n"); 
       exit (1); 
    }
-   
-   char turn;
    printf("Waiting for writer...\n");
    while(1) {
-      turn = sharedMemoryPtr[0];
-      while(turn == 'w') {
-         turn = sharedMemoryPtr[0];
-      }
+      sleep(random() % 4 + 1);
+      while(sharedMemoryPtr[0] == 'w');
       printf("Reader Received: %s\n", sharedMemoryPtr + 1);
-      strcpy(sharedMemoryPtr, "w");
+      strcpy(temp, "1");
+      strcat(temp, sharedMemoryPtr + 1);
+      if (sharedMemoryPtr[0] == 'r') {
+         strcpy(sharedMemoryPtr, temp);
+         while(sharedMemoryPtr[0] == '1');
+      } else {
+         strcpy(sharedMemoryPtr, "w");
+      }
    }
-
    return 0; 
 }
 
