@@ -45,6 +45,7 @@ int main ()
    while(1) {
        turn = sharedMemoryPtr[0];
        while(sharedMemoryPtr[0] == 'r' || sharedMemoryPtr[0] == '1');
+       // { printf("%c", sharedMemoryPtr[0]); }
        printf("Input something to write: ");
        scanf("%s", input);
        strcpy(sharedMemoryPtr, "r");
