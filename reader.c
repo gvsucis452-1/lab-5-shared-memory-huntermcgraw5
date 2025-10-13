@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
+#include <time.h>
 
 #define SHM_SIZE 4096
 
@@ -25,7 +26,7 @@ int shmId, count;
 
 int main () 
 { 
-
+   srand(time(NULL));
    int fd[2];
    int pipe_creation_result;
 
